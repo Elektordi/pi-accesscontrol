@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <sys/time.h>
+#include <signal.h>
 #include <libpiface-1.0/pfio.h>
 
 #define BITSCOUNT 34
@@ -14,13 +15,54 @@
 
 typedef char bool;
 
+struct card {
+	struct card * next;
+	long int code;
+};
+
+struct card * cards; // Global
+
+void read_config()
+{
+    long int code = 0;
+    cards = NULL;
+    
+#if DEBUG
+    printf("Reading config...\n");
+#endif
+    FILE * file = fopen ("cards.txt","r");
+    if (file == NULL) perror("Unable to load cards.txt");
+    while(fscanf(file,"%li %*s",&code)==1) {
+#if DEBUG
+    	printf("New code: %li\n",code);
+#endif
+			struct card * newcard = (struct card *)malloc(sizeof(struct card));
+			newcard->code = code;
+			newcard->next = cards;
+			cards = newcard;
+    }
+    fclose (file);
+#if DEBUG
+    printf("Config ok.\n");
+#endif
+}
+
+void signal_handler(int sig)
+{
+		if(sig==SIGHUP) read_config();
+}
+
 int main(void)
 {
     if (pfio_init() < 0) perror("Cannot start PFIO");
 
-    long int code=0, last=0;
-    int count=0;
-    bool last_d0=0, last_d1=0;
+    long int code = 0, last = 0;
+    int count = 0;
+    bool last_d0 = 0, last_d1 = 0;
+    
+    read_config();
+    
+    if(signal(SIGHUP, signal_handler) == SIG_ERR) perror("Cannot handle signals.");
 
 #if DEBUG
     printf("Ready!");
@@ -33,7 +75,7 @@ int main(void)
 
 			struct timeval tv;
       gettimeofday(&tv, NULL);
-      long int now=tv.tv_usec + tv.tv_sec*1000;
+      long int now = tv.tv_usec + tv.tv_sec*1000;
 
       if((now - last > TIMEOUT)||(now<last)) {
 #if DEBUG
@@ -64,7 +106,18 @@ int main(void)
 #if DEBUG
         printf("[%li]\n",code);
 #endif
-        if(code==114986830) {
+
+				struct card * c = cards;
+				bool allowed = 0;
+				while(c) {
+					if(c->code == code) {
+						allowed = 1;
+						break;
+					}
+					c = c->next;
+				};
+
+        if(allowed) {
             // Accepte
 #if DEBUG
           printf("Access authorized!\n");
