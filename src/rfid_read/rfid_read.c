@@ -3,15 +3,27 @@
 #include <signal.h>
 #include <libpiface-1.0/pfio.h>
 
-#define BITSCOUNT 34
-#define TIMEOUT 40000
-#define DOOR_DELAY 5
+// Start of config
+
+#define BITSCOUNT 34 // For KR300 RFID Reader
+#define TIMEOUT 40000 //µs
+#define DOOR_DELAY 5 //s
+
+#define PIN_EXIT 1
+#define PIN_D0 7
+#define PIN_D1 8
 
 #define PIN_DOOR 1
 #define PIN_BUZZER 7
 #define PIN_GLED 8
 
 #define DEBUG 1
+
+// End of config
+
+#define MASK_EXIT (1 << (PIN_EXIT-1))
+#define MASK_D0 (1 << (PIN_D0-1))
+#define MASK_D1 (1 << (PIN_D1-1))
 
 typedef char bool;
 
@@ -65,7 +77,7 @@ int main(void)
     if(signal(SIGHUP, signal_handler) == SIG_ERR) perror("Cannot handle signals.");
 
 #if DEBUG
-    printf("Ready!");
+    printf("Ready!\n");
 #endif
 
     while (1)
@@ -85,8 +97,28 @@ int main(void)
         code = 0;
       }
 
-      bool d0 = (i & 0x40)>0;
-      bool d1 = (i & 0x80)>0;
+      bool d0 = (i & MASK_D0)==0;
+      bool d1 = (i & MASK_D1)==0;
+      bool button = (i & MASK_EXIT)==0;
+      
+      if(button) {
+					#if DEBUG
+							printf("Exit button pressed!!!\n");
+					#endif
+		      pfio_digital_write(PIN_DOOR,1);
+          pfio_digital_write(PIN_GLED,1);
+          pfio_digital_write(PIN_BUZZER,1);
+          usleep(100000);
+          pfio_digital_write(PIN_BUZZER,0);
+          while((pfio_read_input() & MASK_EXIT)==0) sleep(1);
+					#if DEBUG
+							printf("Exit button released!!!\n");
+					#endif
+          sleep(DOOR_DELAY);
+          pfio_digital_write(PIN_GLED,0);
+          pfio_digital_write(PIN_DOOR,0);
+      }
+      
 			if(d0 && !last_d0) {
 #if DEBUG
         printf("0");
