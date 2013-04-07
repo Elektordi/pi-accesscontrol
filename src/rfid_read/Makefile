@@ -7,6 +7,8 @@ rfid_read: rfid_read.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o rfid_read rfid_read.c
 
 run: rfid_read
+	sudo modprobe spi_bcm2708
+	sudo killall rfid_read ; true
 	sudo LD_LIBRARY_PATH=/usr/local/lib ./rfid_read
 
 

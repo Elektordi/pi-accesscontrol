@@ -59,6 +59,12 @@ void read_config()
 #endif
 }
 
+void beep(int ms) {
+		pfio_digital_write(PIN_BUZZER,1);
+		usleep(ms*1000);
+		pfio_digital_write(PIN_BUZZER,0);
+}
+
 void open_door_start()
 {
 		pfio_digital_write(PIN_DOOR,1);
@@ -71,14 +77,10 @@ void open_door_stop()
 		pfio_digital_write(PIN_DOOR,0);
 }
 
-void open_door(bool beep)
+void open_door(bool open_beep)
 {
 		open_door_start();
-		if(beep) {
-			pfio_digital_write(PIN_BUZZER,1);
-			usleep(100000);
-			pfio_digital_write(PIN_BUZZER,0);
-    }
+		if(open_beep) beep(100);
 		sleep(DOOR_DELAY);
 		open_door_stop();
 }
@@ -102,6 +104,8 @@ int main(void)
     
     if(signal(SIGHUP, signal_handler) == SIG_ERR) perror("Cannot handle signal SIGHUP.");
     if(signal(SIGUSR1, signal_handler) == SIG_ERR) perror("Cannot handle signal SIGUSR1.");
+
+		beep(1000);
 
 #if DEBUG
     printf("Ready!\n");
@@ -133,9 +137,7 @@ int main(void)
 							printf("Exit button pressed!!!\n");
 					#endif
 		      open_door_start();
-          pfio_digital_write(PIN_BUZZER,1);
-          usleep(100000);
-          pfio_digital_write(PIN_BUZZER,0);
+          beep(100);
           while((pfio_read_input() & MASK_EXIT)==0) sleep(1);
 					#if DEBUG
 							printf("Exit button released!!!\n");
@@ -192,9 +194,7 @@ int main(void)
           int n;
           for(n=0; n<3; n++) {
             usleep(200000);
-            pfio_digital_write(PIN_BUZZER,1);
-            usleep(100000);
-            pfio_digital_write(PIN_BUZZER,0);
+            beep(100);
           }
 #if DEBUG
           printf("OK\n");
