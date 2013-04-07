@@ -62,6 +62,18 @@ void read_config()
 #endif
 }
 
+void clear_config()
+{
+		struct card * c = cards;
+		struct card * next;
+		while(c) {
+			next = c->next;
+			free(c);
+			c = next;
+		}
+		cards = NULL;
+}
+
 void beep(int ms) {
 		pfio_digital_write(PIN_BUZZER,1);
 		usleep(ms*1000);
@@ -91,8 +103,18 @@ void open_door(bool open_beep)
 
 void signal_handler(int sig)
 {
-		if(sig==SIGHUP) read_config();
-		else if(sig==SIGUSR1) open_door(1);
+		if(sig==SIGUSR1) {
+			open_door(1);
+		}
+		else if(sig==SIGHUP) {
+			clear_config();
+			read_config();
+		}
+		else if(sig==SIGINT) {
+			printf("Got SIGINT! Exiting...");
+			clear_config();
+			exit(0);
+		}
 }
 
 int main(void)
@@ -107,6 +129,7 @@ int main(void)
     
     if(signal(SIGHUP, signal_handler) == SIG_ERR) perror("Cannot handle signal SIGHUP.");
     if(signal(SIGUSR1, signal_handler) == SIG_ERR) perror("Cannot handle signal SIGUSR1.");
+    if(signal(SIGINT, signal_handler) == SIG_ERR) perror("Cannot handle signal SIGINT.");
 
 		beep(1000);
 
