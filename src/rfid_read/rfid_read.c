@@ -10,6 +10,7 @@
 #define DOOR_DELAY 5 //s
 
 #define PIN_EXIT 1
+#define PIN_LOCK 2
 #define PIN_D0 7
 #define PIN_D1 8
 
@@ -22,6 +23,7 @@
 // End of config
 
 #define MASK_EXIT (1 << (PIN_EXIT-1))
+#define MASK_LOCK (1 << (PIN_LOCK-1))
 #define MASK_D0 (1 << (PIN_D0-1))
 #define MASK_D1 (1 << (PIN_D1-1))
 
@@ -33,6 +35,7 @@ struct card {
 };
 
 struct card * cards; // Global
+bool locked = 0; // Global
 
 void read_config()
 {
@@ -131,6 +134,22 @@ int main(void)
       bool d0 = (i & MASK_D0)==0;
       bool d1 = (i & MASK_D1)==0;
       bool button = (i & MASK_EXIT)==0;
+      bool lockcmd = (i & MASK_LOCK)==0;
+      
+      if(lockcmd || locked) {
+#if DEBUG
+	        printf("*** LOCK ***\n");
+#endif
+      		while(((pfio_read_input() & MASK_LOCK)==0)||locked) {
+						pfio_digital_write(PIN_GLED,1);
+		        usleep(200000);
+						pfio_digital_write(PIN_GLED,0);
+		        usleep(200000);
+          }
+#if DEBUG
+	        printf("*** UNLOCK ***\n");
+#endif
+      }
       
       if(button) {
 					#if DEBUG
