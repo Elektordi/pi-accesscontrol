@@ -1,0 +1,29 @@
+The current pi-accesscontrol prototype is composed of:
+(Farnell references indicated as [xxx])
+
+Raspberry PI Model B [2191863]
+PiFace Digital Extension Card [2218566]
+Power supply with 5v and 12v outputs [1860897]
+
+And I'm using the following reader:
+http://access.zksoftware.com/productsShow.asp?ID=157&BigClassName=RFID%20Reader
+(Hint: Put some tape over beeper output if you want to stay calm ;) )
+
+Wirings:
+- PiFace connected to Raspberry as indicated in manual*
+- PSU 5v <=> PiFace 5v input (between relays and outputs)
+- PSU 12v <=> Reader DC+ (Red wire) <=> PiFace Relay 1 Common
+- PSU GND <=> PiFace 0v/GND <=> Reader GND (Black wire)
+- Reader D0 (Green) <=> PiFace Input 8
+- Reader D1 (White) <=> PiFace Input 7
+- Reader Green LED (Grey) <=> PiFace Output 8
+- Reader Beeper (Purple) <=> PiFace Output 7
+- PiFace Relay 1 NO or NC (depending of installation) <=> Door system +
+- PSU GND <=> Door system -
+
+
+PiFace manual (hard to find):
+https://googledrive.com/host/0B-UAZ9CyJCLGQjJ3RDlqa2pqaDg/pifacedigitaldatasheet.pdf
+PiFace schematics (same problem):
+http://getfile9.posterous.com/getfile/files.posterous.com/temp-2012-05-02/DEJgxhsvcmEszfirezBicjEmnponFuCsDccbilxCshmHBCJnGmhepvJDaahz/rpBreakOutV0_4_sch.pdf (downloaded in doc folder)
+http://getfile0.posterous.com/getfile/files.posterous.com/temp-2012-05-02/afttGbmzfymsgilIIvwuuFCnFiokuctvdzjfrdHezDAncGEbiCipikulsiIb/rpBreakOutV0_4.pdf
