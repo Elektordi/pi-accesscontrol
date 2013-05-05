@@ -6,4 +6,5 @@
                 <li><?php echo $this->Html->link(__('Manage Doors'), array('controller' => 'doors', 'action' => 'index')); ?> </li>
                 <li><?php echo $this->Html->link(__('View Logs'), array('controller' => 'logs', 'action' => 'index')); ?> </li>
                 <li><?php echo $this->Html->link(__('View Web Logs'), array('controller' => 'web_logs', 'action' => 'index')); ?> </li>
+                <li><?php echo $this->Html->link(__('Logout'), '/logout'); ?> </li>
         </ul>

@@ -15,6 +15,12 @@ mkdir app/tmp/tests
 
 chmod -R a+w app/tmp
 
-echo OK
+echo app/tmp ready.
+echo
+
+cd ../..
+git submodule foreach git pull
+
+echo
 echo Remember to copy Config/database.php.default to Config/database.php and set appropriate values.
 echo Then run \"app/Console/cake schema create\" in backend directory!
