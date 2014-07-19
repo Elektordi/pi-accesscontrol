@@ -1,3 +1,0 @@
-[submodule "src/backend/lib/cakephp"]
-	path = src/backend/lib/cakephp
-	url = git://github.com/cakephp/cakephp.git/
