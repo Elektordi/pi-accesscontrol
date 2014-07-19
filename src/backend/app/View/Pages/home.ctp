@@ -21,7 +21,5 @@ if (!Configure::read('debug')):
 endif;
 App::uses('Debugger', 'Utility');
 ?>
-	<div class="actions">
-		<?php echo $this->element('menubox'); ?>
-	</div>
-<p>TODO</p>
+
+<h1><blink>TODO</blink></h1>

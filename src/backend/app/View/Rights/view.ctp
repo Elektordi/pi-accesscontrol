@@ -1,29 +1,40 @@
-<div class="rights view">
-<h2><?php  echo __('Right'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($right['Right']['id']); ?>
+
+<div id="page-container" class="row">
+	
+	<div id="page-content">
+		
+		<div class="rights view content">
+
+                    <div class="btn-toolbar pull-right">
+                    <?php if($user_level>=5) { ?>                        <div class="btn-group">
+                            <?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span> '.__('Modifier Right'), array('action' => 'edit', $right['Right']['id']), array('class' => 'btn btn-default', 'escape' => FALSE)); ?>                            <?php if($user_level>=7) echo $this->Form->postLink('<span class="glyphicon glyphicon-remove"></span> '.__('Supprimer Right'), array('action' => 'delete', $right['Right']['id']), array('class' => 'btn btn-default', 'escape' => FALSE), __('Are you sure you want to delete # %s?', $right['Right']['id'])); ?>                        </div>
+                    <?php } ?>                        <div class="btn-group">
+                            <?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span> '.__('Retour à la liste'), array('action' => 'index'), array('class' => 'btn btn-default', 'escape' => FALSE)); ?>                        </div>
+                    </div>
+                    <h2><?php  echo __('Fiche Right').': '.$right['Right']['id']; ?></h2>
+			
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered">
+					<tbody>
+						<tr>		<td><strong><?php echo __('Group'); ?></strong></td>
+		<td>
+			<?php echo $this->Html->link($right['Group']['name'], array('controller' => 'groups', 'action' => 'view', $right['Group']['id']), array('class' => '')); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Group'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($right['Group']['name'], array('controller' => 'groups', 'action' => 'view', $right['Group']['id'])); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Door'); ?></strong></td>
+		<td>
+			<?php echo $this->Html->link($right['Door']['name'], array('controller' => 'doors', 'action' => 'view', $right['Door']['id']), array('class' => '')); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Door'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($right['Door']['name'], array('controller' => 'doors', 'action' => 'view', $right['Door']['id'])); ?>
-			&nbsp;
-		</dd>
-	</dl>
-</div>
-<div class="actions">
-    <?php echo $this->element('menubox'); ?>	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Right'), array('action' => 'edit', $right['Right']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Right'), array('action' => 'delete', $right['Right']['id']), null, __('Are you sure you want to delete # %s?', $right['Right']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Rights'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Right'), array('action' => 'add')); ?> </li>
-	</ul>
-</div>
+		</td>
+</tr>					</tbody>
+				</table><!-- /.table table-striped table-bordered -->
+			</div><!-- /.table-responsive -->
+			
+		</div><!-- /.view -->
+
+                <div style="margin-top: 20px">&nbsp;</div>
+                
+			
+	</div><!-- /#page-content .span9 -->
+
+</div><!-- /#page-container .row-fluid -->

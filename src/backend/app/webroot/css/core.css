@@ -1,0 +1,42 @@
+#header{margin-top:20px;}
+#page-container{margin-bottom:20px;}
+#url-rewriting-warning {display: none;}
+.xdebug-var-dump {margin-top: 50px;}
+
+.actions {
+    width: 150px;
+}
+
+@media print {
+
+    #header {
+        margin-top: 0px !important;
+    }
+    
+    .btn-group {
+        display: none !important;
+    }
+    
+    .cake-sql-log {
+        display: none !important;
+    }
+    
+    .actions {
+        display: none !important;
+    }
+    
+    .pagination {
+        display: none !important;
+    }
+    
+    .container {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        max-width: 100% !important;
+    }
+    
+    a[href]:after{
+        content:"";
+    }
+}
+

@@ -1,44 +1,55 @@
-<div class="logs view">
-<h2><?php  echo __('Log'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($log['Log']['id']); ?>
+
+<div id="page-container" class="row">
+	
+	<div id="page-content">
+		
+		<div class="logs view content">
+
+                    <div class="btn-toolbar pull-right">
+                    <?php if($user_level>=5) { ?>                        <div class="btn-group">
+                            <?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span> '.__('Modifier Log'), array('action' => 'edit', $log['Log']['id']), array('class' => 'btn btn-default', 'escape' => FALSE)); ?>                            <?php if($user_level>=7) echo $this->Form->postLink('<span class="glyphicon glyphicon-remove"></span> '.__('Supprimer Log'), array('action' => 'delete', $log['Log']['id']), array('class' => 'btn btn-default', 'escape' => FALSE), __('Are you sure you want to delete # %s?', $log['Log']['id'])); ?>                        </div>
+                    <?php } ?>                        <div class="btn-group">
+                            <?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span> '.__('Retour à la liste'), array('action' => 'index'), array('class' => 'btn btn-default', 'escape' => FALSE)); ?>                        </div>
+                    </div>
+                    <h2><?php  echo __('Fiche Log').': '.$log['Log']['id']; ?></h2>
+			
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered">
+					<tbody>
+						<tr>		<td><strong><?php echo __('Timestamp'); ?></strong></td>
+		<td>
+			<?php echo $this->element('value',array('page'=>'view', 'name'=>'timestamp', 'type'=>'datetime', 'v'=>$log['Log']['timestamp'])); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Timestamp'); ?></dt>
-		<dd>
-			<?php echo h($log['Log']['timestamp']); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Action'); ?></strong></td>
+		<td>
+			<?php echo $this->element('value',array('page'=>'view', 'name'=>'action', 'type'=>'string', 'v'=>$log['Log']['action'])); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Action'); ?></dt>
-		<dd>
-			<?php echo h($log['Log']['action']); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Card'); ?></strong></td>
+		<td>
+			<?php echo $this->Html->link($log['Card']['id'], array('controller' => 'cards', 'action' => 'view', $log['Card']['id']), array('class' => '')); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Card'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($log['Card']['id'], array('controller' => 'cards', 'action' => 'view', $log['Card']['id'])); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Door'); ?></strong></td>
+		<td>
+			<?php echo $this->Html->link($log['Door']['name'], array('controller' => 'doors', 'action' => 'view', $log['Door']['id']), array('class' => '')); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Door'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($log['Door']['name'], array('controller' => 'doors', 'action' => 'view', $log['Door']['id'])); ?>
+		</td>
+</tr><tr>		<td><strong><?php echo __('Result'); ?></strong></td>
+		<td>
+			<?php echo $this->element('value',array('page'=>'view', 'name'=>'result', 'type'=>'string', 'v'=>$log['Log']['result'])); ?>
 			&nbsp;
-		</dd>
-		<dt><?php echo __('Result'); ?></dt>
-		<dd>
-			<?php echo h($log['Log']['result']); ?>
-			&nbsp;
-		</dd>
-	</dl>
-</div>
-<div class="actions">
-    <?php echo $this->element('menubox'); ?>	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Log'), array('action' => 'edit', $log['Log']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Log'), array('action' => 'delete', $log['Log']['id']), null, __('Are you sure you want to delete # %s?', $log['Log']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Logs'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Log'), array('action' => 'add')); ?> </li>
-	</ul>
-</div>
+		</td>
+</tr>					</tbody>
+				</table><!-- /.table table-striped table-bordered -->
+			</div><!-- /.table-responsive -->
+			
+		</div><!-- /.view -->
+
+                <div style="margin-top: 20px">&nbsp;</div>
+                
+			
+	</div><!-- /#page-content .span9 -->
+
+</div><!-- /#page-container .row-fluid -->

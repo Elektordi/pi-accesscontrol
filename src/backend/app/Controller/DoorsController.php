@@ -4,8 +4,16 @@ App::uses('AppController', 'Controller');
  * Doors Controller
  *
  * @property Door $Door
+ * @property PaginatorComponent $Paginator
  */
 class DoorsController extends AppController {
+
+/**
+ * Components
+ *
+ * @var array
+ */
+	public $components = array('Paginator');
 
 /**
  * index method
@@ -26,7 +34,7 @@ class DoorsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Door->exists($id)) {
-			throw new NotFoundException(__('Invalid door'));
+			throw new NotFoundException(__('Door invalide.'));
 		}
 		$options = array('conditions' => array('Door.' . $this->Door->primaryKey => $id));
 		$this->set('door', $this->Door->find('first', $options));
@@ -41,11 +49,14 @@ class DoorsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Door->create();
 			if ($this->Door->save($this->request->data)) {
-				$this->Session->setFlash(__('The door has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Door enregistré.'), 'flash/success');
+				$this->redirect(array('action' => 'view', $this->Door->id));
 			} else {
-				$this->Session->setFlash(__('The door could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('Door impossible à enregistrer. Réessayez ultérieurement.'), 'flash/error');
 			}
+		}
+		foreach($this->passedArgs as $k => $v) {
+		    $this->set('default_'.$k, $v);
 		}
 	}
 
@@ -57,40 +68,45 @@ class DoorsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+        $this->Door->id = $id;
 		if (!$this->Door->exists($id)) {
-			throw new NotFoundException(__('Invalid door'));
+			throw new NotFoundException(__('Door invalide.'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Door->save($this->request->data)) {
-				$this->Session->setFlash(__('The door has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Door sauvegardé.'), 'flash/success');
+				$this->redirect(array('action' => 'view', $this->Door->id));
 			} else {
-				$this->Session->setFlash(__('The door could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('Door impossible à enregistrer. Réessayez ultérieurement.'), 'flash/error');
 			}
-		} else {
-			$options = array('conditions' => array('Door.' . $this->Door->primaryKey => $id));
-			$this->request->data = $this->Door->find('first', $options);
 		}
+		$options = array('conditions' => array('Door.' . $this->Door->primaryKey => $id));
+		$this->request->data = $this->Door->find('first', $options);
+        $this->set('door', $this->request->data);
+
 	}
 
 /**
  * delete method
  *
  * @throws NotFoundException
+ * @throws MethodNotAllowedException
  * @param string $id
  * @return void
  */
 	public function delete($id = null) {
+		if (!$this->request->is('post')) {
+			throw new MethodNotAllowedException();
+		}
 		$this->Door->id = $id;
 		if (!$this->Door->exists()) {
-			throw new NotFoundException(__('Invalid door'));
+			throw new NotFoundException(__('Door invalide.'));
 		}
-		$this->request->onlyAllow('post', 'delete');
 		if ($this->Door->delete()) {
-			$this->Session->setFlash(__('Door deleted'));
+			$this->Session->setFlash(__('Door supprimé.'), 'flash/success');
 			$this->redirect(array('action' => 'index'));
 		}
-		$this->Session->setFlash(__('Door was not deleted'));
+		$this->Session->setFlash(__('Door impossible à supprimer.'), 'flash/error');
 		$this->redirect(array('action' => 'index'));
 	}
 }

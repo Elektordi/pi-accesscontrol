@@ -4,8 +4,16 @@ App::uses('AppController', 'Controller');
  * WebLogs Controller
  *
  * @property WebLog $WebLog
+ * @property PaginatorComponent $Paginator
  */
 class WebLogsController extends AppController {
+
+/**
+ * Components
+ *
+ * @var array
+ */
+	public $components = array('Paginator');
 
 /**
  * index method
@@ -26,7 +34,7 @@ class WebLogsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->WebLog->exists($id)) {
-			throw new NotFoundException(__('Invalid web log'));
+			throw new NotFoundException(__('Web Log invalide.'));
 		}
 		$options = array('conditions' => array('WebLog.' . $this->WebLog->primaryKey => $id));
 		$this->set('webLog', $this->WebLog->find('first', $options));
@@ -41,14 +49,17 @@ class WebLogsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->WebLog->create();
 			if ($this->WebLog->save($this->request->data)) {
-				$this->Session->setFlash(__('The web log has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Web Log enregistré.'), 'flash/success');
+				$this->redirect(array('action' => 'view', $this->WebLog->id));
 			} else {
-				$this->Session->setFlash(__('The web log could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('Web Log impossible à enregistrer. Réessayez ultérieurement.'), 'flash/error');
 			}
 		}
 		$users = $this->WebLog->User->find('list');
 		$this->set(compact('users'));
+		foreach($this->passedArgs as $k => $v) {
+		    $this->set('default_'.$k, $v);
+		}
 	}
 
 /**
@@ -59,20 +70,22 @@ class WebLogsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+        $this->WebLog->id = $id;
 		if (!$this->WebLog->exists($id)) {
-			throw new NotFoundException(__('Invalid web log'));
+			throw new NotFoundException(__('Web Log invalide.'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->WebLog->save($this->request->data)) {
-				$this->Session->setFlash(__('The web log has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Web Log sauvegardé.'), 'flash/success');
+				$this->redirect(array('action' => 'view', $this->WebLog->id));
 			} else {
-				$this->Session->setFlash(__('The web log could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('Web Log impossible à enregistrer. Réessayez ultérieurement.'), 'flash/error');
 			}
-		} else {
-			$options = array('conditions' => array('WebLog.' . $this->WebLog->primaryKey => $id));
-			$this->request->data = $this->WebLog->find('first', $options);
 		}
+		$options = array('conditions' => array('WebLog.' . $this->WebLog->primaryKey => $id));
+		$this->request->data = $this->WebLog->find('first', $options);
+        $this->set('webLog', $this->request->data);
+
 		$users = $this->WebLog->User->find('list');
 		$this->set(compact('users'));
 	}
@@ -81,20 +94,23 @@ class WebLogsController extends AppController {
  * delete method
  *
  * @throws NotFoundException
+ * @throws MethodNotAllowedException
  * @param string $id
  * @return void
  */
 	public function delete($id = null) {
+		if (!$this->request->is('post')) {
+			throw new MethodNotAllowedException();
+		}
 		$this->WebLog->id = $id;
 		if (!$this->WebLog->exists()) {
-			throw new NotFoundException(__('Invalid web log'));
+			throw new NotFoundException(__('Web Log invalide.'));
 		}
-		$this->request->onlyAllow('post', 'delete');
 		if ($this->WebLog->delete()) {
-			$this->Session->setFlash(__('Web log deleted'));
+			$this->Session->setFlash(__('Web Log supprimé.'), 'flash/success');
 			$this->redirect(array('action' => 'index'));
 		}
-		$this->Session->setFlash(__('Web log was not deleted'));
+		$this->Session->setFlash(__('Web Log impossible à supprimer.'), 'flash/error');
 		$this->redirect(array('action' => 'index'));
 	}
 }

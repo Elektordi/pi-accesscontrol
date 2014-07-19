@@ -4,8 +4,16 @@ App::uses('AppController', 'Controller');
  * Cards Controller
  *
  * @property Card $Card
+ * @property PaginatorComponent $Paginator
  */
 class CardsController extends AppController {
+
+/**
+ * Components
+ *
+ * @var array
+ */
+	public $components = array('Paginator');
 
 /**
  * index method
@@ -26,7 +34,7 @@ class CardsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Card->exists($id)) {
-			throw new NotFoundException(__('Invalid card'));
+			throw new NotFoundException(__('Card invalide.'));
 		}
 		$options = array('conditions' => array('Card.' . $this->Card->primaryKey => $id));
 		$this->set('card', $this->Card->find('first', $options));
@@ -41,14 +49,17 @@ class CardsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Card->create();
 			if ($this->Card->save($this->request->data)) {
-				$this->Session->setFlash(__('The card has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Card enregistré.'), 'flash/success');
+				$this->redirect(array('action' => 'view', $this->Card->id));
 			} else {
-				$this->Session->setFlash(__('The card could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('Card impossible à enregistrer. Réessayez ultérieurement.'), 'flash/error');
 			}
 		}
 		$users = $this->Card->User->find('list');
 		$this->set(compact('users'));
+		foreach($this->passedArgs as $k => $v) {
+		    $this->set('default_'.$k, $v);
+		}
 	}
 
 /**
@@ -59,20 +70,22 @@ class CardsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+        $this->Card->id = $id;
 		if (!$this->Card->exists($id)) {
-			throw new NotFoundException(__('Invalid card'));
+			throw new NotFoundException(__('Card invalide.'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Card->save($this->request->data)) {
-				$this->Session->setFlash(__('The card has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Card sauvegardé.'), 'flash/success');
+				$this->redirect(array('action' => 'view', $this->Card->id));
 			} else {
-				$this->Session->setFlash(__('The card could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('Card impossible à enregistrer. Réessayez ultérieurement.'), 'flash/error');
 			}
-		} else {
-			$options = array('conditions' => array('Card.' . $this->Card->primaryKey => $id));
-			$this->request->data = $this->Card->find('first', $options);
 		}
+		$options = array('conditions' => array('Card.' . $this->Card->primaryKey => $id));
+		$this->request->data = $this->Card->find('first', $options);
+        $this->set('card', $this->request->data);
+
 		$users = $this->Card->User->find('list');
 		$this->set(compact('users'));
 	}
@@ -81,20 +94,23 @@ class CardsController extends AppController {
  * delete method
  *
  * @throws NotFoundException
+ * @throws MethodNotAllowedException
  * @param string $id
  * @return void
  */
 	public function delete($id = null) {
+		if (!$this->request->is('post')) {
+			throw new MethodNotAllowedException();
+		}
 		$this->Card->id = $id;
 		if (!$this->Card->exists()) {
-			throw new NotFoundException(__('Invalid card'));
+			throw new NotFoundException(__('Card invalide.'));
 		}
-		$this->request->onlyAllow('post', 'delete');
 		if ($this->Card->delete()) {
-			$this->Session->setFlash(__('Card deleted'));
+			$this->Session->setFlash(__('Card supprimé.'), 'flash/success');
 			$this->redirect(array('action' => 'index'));
 		}
-		$this->Session->setFlash(__('Card was not deleted'));
+		$this->Session->setFlash(__('Card impossible à supprimer.'), 'flash/error');
 		$this->redirect(array('action' => 'index'));
 	}
 }

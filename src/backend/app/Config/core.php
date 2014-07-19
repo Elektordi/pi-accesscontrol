@@ -100,7 +100,9 @@
  * the plugin assets into you app's webroot directory. This is
  * recommended even when you are using mod_rewrite. Handling static
  * assets through the Dispatcher is incredibly inefficient and
- * included primarily as a development convenience - and
+ * included primarily as a development convenience - andConfigure::write('Cookie.SecurityKey', 'vKh5SYhHDzZ99cA1m19SDgwbNfgpLBUM8ZtVAf06pLiEp2gTwT31KEhrWbXnMZ5w');
+
+define('DATE_MYSQL', 'Y-m-d H:i:s');
  * thus not recommended for production applications.
  */
 	//Configure::write('App.baseUrl', env('SCRIPT_NAME'));
@@ -346,3 +348,8 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+Configure::write('Cookie.SecurityKey', 'vKh5SYhHDzZ99cA1m19SDgwbNfgpLBUM8ZtVAf06pLiEp2gTwT31KEhrWbXnMZ5w');
+
+define('DATE_MYSQL', 'Y-m-d H:i:s');
+

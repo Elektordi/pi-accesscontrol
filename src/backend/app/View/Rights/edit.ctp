@@ -1,20 +1,37 @@
-<div class="rights form">
-<?php echo $this->Form->create('Right'); ?>
-	<fieldset>
-		<legend><?php echo __('Edit Right'); ?></legend>
-	<?php
-		echo $this->Form->input('id');
-		echo $this->Form->input('group_id');
-		echo $this->Form->input('door_id');
-	?>
-	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
-</div>
-<div class="actions">
-    <?php echo $this->element('menubox'); ?>	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
 
-		<li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Right.id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Right.id'))); ?></li>
-		<li><?php echo $this->Html->link(__('List Rights'), array('action' => 'index')); ?></li>
-	</ul>
-</div>
+<div id="page-container" class="row">
+	
+	<div id="page-content">
+		<div class="rights form">
+                    
+                    		
+			<?php echo $this->MyForm->create('Right', array('inputDefaults' => array('label' => false), 'role' => 'form')); ?>
+				<fieldset>
+
+                                    <div class="btn-toolbar pull-right">
+                                                                                <div class="btn-group">
+                                            <?php echo $this->Html->link('<span class="glyphicon glyphicon-file"></span> '.__('Retour fiche Right'), array('action' => 'view', $right['Right']['id']), array('class' => 'btn btn-default', 'escape' => FALSE)); ?>                                        </div>
+                                                                                <div class="btn-group">
+                                            <?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span> '.__('Retour à la liste'), array('action' => 'index'), array('class' => 'btn btn-default', 'escape' => FALSE)); ?>                                        </div>
+                                    </div>
+                    
+                                                                        <h2><?php  echo __('Modifier Right').': '.$right['Right']['id']; ?></h2>
+                                    			<div class="form-group">
+	<?php echo $this->MyForm->label('group_id', 'Group Id');?>
+		<?php echo $this->MyForm->input('group_id', array('class' => 'form-control', 'value' => (empty($default_group_id)?null:$default_group_id))); ?>
+</div><!-- .form-group -->
+
+<div class="form-group">
+	<?php echo $this->MyForm->label('door_id', 'Door Id');?>
+		<?php echo $this->MyForm->input('door_id', array('class' => 'form-control', 'value' => (empty($default_door_id)?null:$default_door_id))); ?>
+</div><!-- .form-group -->
+
+				</fieldset>
+			<?php echo $this->MyForm->submit(__('Enregistrer'), array('class' => 'btn btn-large btn-primary')); ?>
+<?php echo $this->MyForm->end(); ?>
+			
+		</div><!-- /.form -->
+			
+	</div><!-- /#page-content .col-sm-9 -->
+
+</div><!-- /#page-container .row-fluid -->

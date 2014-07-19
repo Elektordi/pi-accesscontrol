@@ -2,6 +2,8 @@
 /**
  * The View Tasks handles creating and updating view files.
  *
+ * PHP 5
+ *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -151,7 +153,7 @@ class ViewTask extends BakeTask {
 					unset($methods[$i]);
 				}
 			}
-			if ($method[0] === '_' || $method === strtolower($this->controllerName . 'Controller')) {
+			if ($method[0] === '_' || $method == strtolower($this->controllerName . 'Controller')) {
 				unset($methods[$i]);
 			}
 		}
@@ -276,10 +278,13 @@ class ViewTask extends BakeTask {
 		if ($modelObj) {
 			$primaryKey = $modelObj->primaryKey;
 			$displayField = $modelObj->displayField;
+			$indexFields = $modelObj->indexFields; // GG
+			$viewFields = $modelObj->viewFields; // GG
+			$formFields = $modelObj->formFields; // GG
 			$singularVar = Inflector::variable($modelClass);
 			$singularHumanName = $this->_singularHumanName($this->controllerName);
 			$schema = $modelObj->schema(true);
-			$fields = array_keys($schema);
+			$fields = array_merge(array_keys($schema), array_keys($modelObj->virtualFields)); // GG
 			$associations = $this->_associations($modelObj);
 		} else {
 			$primaryKey = $displayField = null;
@@ -291,14 +296,14 @@ class ViewTask extends BakeTask {
 		$pluralHumanName = $this->_pluralHumanName($this->controllerName);
 
 		return compact('modelClass', 'schema', 'primaryKey', 'displayField', 'singularVar', 'pluralVar',
-				'singularHumanName', 'pluralHumanName', 'fields', 'associations');
+				'singularHumanName', 'pluralHumanName', 'fields', 'associations', /* GG */ 'indexFields', 'viewFields', 'formFields' /* /GG */);
 	}
 
 /**
  * Bake a view file for each of the supplied actions
  *
  * @param array $actions Array of actions to make files for.
- * @param array $vars The template variables.
+ * @param array $vars
  * @return void
  */
 	public function bakeActions($actions, $vars) {
@@ -412,14 +417,13 @@ class ViewTask extends BakeTask {
 	}
 
 /**
- * Gets the option parser instance and configures it.
+ * get the option parser for this task
  *
  * @return ConsoleOptionParser
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
-
-		$parser->description(
+		return $parser->description(
 			__d('cake_console', 'Bake views for a controller, using built-in or custom templates.')
 		)->addArgument('controller', array(
 			'help' => __d('cake_console', 'Name of the controller views to bake. Can be Plugin.name as a shortcut for plugin baking.')
@@ -444,17 +448,13 @@ class ViewTask extends BakeTask {
 			'help' => __d('cake_console', 'Force overwriting existing files without prompting.')
 		))->addSubcommand('all', array(
 			'help' => __d('cake_console', 'Bake all CRUD action views for all controllers. Requires models and controllers to exist.')
-		))->epilog(
-			__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.')
-		);
-
-		return $parser;
+		))->epilog(__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.'));
 	}
 
 /**
  * Returns associations for controllers models.
  *
- * @param Model $model The Model instance.
+ * @param Model $model
  * @return array $associations
  */
 	protected function _associations(Model $model) {
@@ -469,6 +469,9 @@ class ViewTask extends BakeTask {
 				$associations[$type][$assocKey]['foreignKey'] = $assocData['foreignKey'];
 				$associations[$type][$assocKey]['controller'] = Inflector::pluralize(Inflector::underscore($modelClass));
 				$associations[$type][$assocKey]['fields'] = array_keys($model->{$assocKey}->schema(true));
+				$associations[$type][$assocKey]['schema'] = $model->{$assocKey}->schema(true); // GG
+				$associations[$type][$assocKey]['indexFields'] = $model->{$assocKey}->assocFields; // GG
+				if($associations[$type][$assocKey]['indexFields'] == null) $associations[$type][$assocKey]['indexFields'] = $model->{$assocKey}->indexFields; // GG
 			}
 		}
 		return $associations;
