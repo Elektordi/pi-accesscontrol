@@ -13,7 +13,7 @@ class DoorsController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator');
+	public $components = array('Paginator', 'ZeroMQ');
 
 /**
  * index method
@@ -107,6 +107,28 @@ class DoorsController extends AppController {
 			$this->redirect(array('action' => 'index'));
 		}
 		$this->Session->setFlash(__('Door impossible à supprimer.'), 'flash/error');
+		$this->redirect(array('action' => 'index'));
+	}
+	
+	// TEST GG
+	public function doaction($id = null, $do = null) {
+        $this->Door->id = $id;
+		if (!$this->Door->exists($id)) {
+			throw new NotFoundException(__('Door invalide.'));
+		}
+		if(!in_array($do, array('beep', 'lock', 'unlock'))) {
+    		throw new NotFoundException(__('Action invalide.'));
+		}
+		
+		$options = array('conditions' => array('Door.' . $this->Door->primaryKey => $id));
+		$door = $this->Door->find('first', $options);
+		
+		if($this->ZeroMQ->send('DOOR:'.$id.':'.strtoupper($do))) {
+			$this->Session->setFlash(__("Action $do envoyée à ".$door['Door']['name']), 'flash/success');
+		} else {
+			$this->Session->setFlash(__("Echec de l'envoi de $do à ".$door['Door']['name']), 'flash/error');
+		}
+		
 		$this->redirect(array('action' => 'index'));
 	}
 }

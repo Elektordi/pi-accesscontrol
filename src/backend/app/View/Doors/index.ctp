@@ -36,6 +36,7 @@
 		<td><?php echo $this->element('value',array('page'=>'index', 'name'=>'config', 'type'=>'text', 'v'=>$door['Door']['config'])); ?>&nbsp;</td>
 		<td><?php echo $this->element('value',array('page'=>'index', 'name'=>'serial', 'type'=>'string', 'v'=>$door['Door']['serial'])); ?>&nbsp;</td>
 		<td class="actions">
+			<?php echo $this->Html->link('<span class="glyphicon glyphicon-volume-up"></span> '.__('Beep'), array('action' => 'doaction', $door['Door']['id'], 'beep'), array('class' => 'btn btn-default btn-xs', 'escape' => FALSE)); ?>
 			<?php echo $this->Html->link('<span class="glyphicon glyphicon-file"></span> '.__('Fiche'), array('action' => 'view', $door['Door']['id']), array('class' => 'btn btn-default btn-xs', 'escape' => FALSE)); ?>
 			<?php if($user_level>=5) echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span> '.__('Modifier'), array('action' => 'edit', $door['Door']['id']), array('class' => 'btn btn-default btn-xs', 'escape' => FALSE)); ?>
 		</td>
