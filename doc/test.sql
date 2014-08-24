@@ -45,10 +45,10 @@ CREATE TABLE IF NOT EXISTS `doors` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `ip` varchar(15) NOT NULL,
-  `port` int(10) unsigned NOT NULL,
   `version` varchar(50) NOT NULL,
   `lastseen` datetime DEFAULT NULL,
   `config` text,
+  `serial` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS `doors` (
 -- Contenu de la table `doors`
 --
 
-INSERT INTO `doors` (`id`, `name`, `ip`, `port`, `version`, `lastseen`, `config`) VALUES
-(1, 'Front door', '127.0.0.1', 22, 'Local reader', '2013-05-04 00:00:41', 'useless=1\r\nanswer=42');
+INSERT INTO `doors` (`id`, `name`, `ip`, `version`, `lastseen`, `config`, `serial`) VALUES
+(1, 'Front door', '127.0.0.1', 'Dummy reader', '2013-05-04 00:00:41', 'useless=1\r\nanswer=42', '00000DUMMYSN00000');
 
 -- --------------------------------------------------------
 
@@ -90,16 +90,17 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `action` varchar(50) NOT NULL,
   `card_id` int(10) unsigned DEFAULT NULL,
   `door_id` int(10) unsigned DEFAULT NULL,
-  `result` varchar(10) NOT NULL,
+  `result` varchar(10) DEFAULT NULL,
+  `data` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Contenu de la table `logs`
 --
 
-INSERT INTO `logs` (`id`, `timestamp`, `action`, `card_id`, `door_id`, `result`) VALUES
-(1, '2013-05-04 00:01:43', 'READ', 1, 1, 'ACK');
+INSERT INTO `logs` (`id`, `timestamp`, `action`, `card_id`, `door_id`, `result`, `data`) VALUES
+(1, '2013-05-04 00:01:43', 'READ', 1, 1, 'ACK', '123456');
 
 -- --------------------------------------------------------
 
@@ -132,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(10) NOT NULL,
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(50) NULL,
   `group_id` int(10) unsigned NOT NULL,
   `admin` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)

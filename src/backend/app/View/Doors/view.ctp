@@ -26,11 +26,6 @@
 			<?php echo $this->element('value',array('page'=>'view', 'name'=>'ip', 'type'=>'string', 'v'=>$door['Door']['ip'])); ?>
 			&nbsp;
 		</td>
-</tr><tr>		<td><strong><?php echo __('Port'); ?></strong></td>
-		<td>
-			<?php echo $this->element('value',array('page'=>'view', 'name'=>'port', 'type'=>'integer', 'v'=>$door['Door']['port'])); ?>
-			&nbsp;
-		</td>
 </tr><tr>		<td><strong><?php echo __('Version'); ?></strong></td>
 		<td>
 			<?php echo $this->element('value',array('page'=>'view', 'name'=>'version', 'type'=>'string', 'v'=>$door['Door']['version'])); ?>
@@ -44,6 +39,11 @@
 </tr><tr>		<td><strong><?php echo __('Config'); ?></strong></td>
 		<td>
 			<?php echo $this->element('value',array('page'=>'view', 'name'=>'config', 'type'=>'text', 'v'=>$door['Door']['config'])); ?>
+			&nbsp;
+		</td>
+</tr><tr>		<td><strong><?php echo __('Serial'); ?></strong></td>
+		<td>
+			<?php echo $this->element('value',array('page'=>'view', 'name'=>'serial', 'type'=>'string', 'v'=>$door['Door']['serial'])); ?>
 			&nbsp;
 		</td>
 </tr>					</tbody>
@@ -67,7 +67,7 @@
 						<table class="table table-striped table-bordered">
 							<thead>
 								<tr>
-											<th><?php echo __('#'); ?></th>		<th><?php echo __('Timestamp'); ?></th>		<th><?php echo __('Action'); ?></th>		<th><?php echo __('Card Id'); ?></th>		<th><?php echo __('Result'); ?></th>									<th class="actions col-md-2"><?php echo __('Actions'); ?></th>
+											<th><?php echo __('#'); ?></th>		<th><?php echo __('Timestamp'); ?></th>		<th><?php echo __('Action'); ?></th>		<th><?php echo __('Card Id'); ?></th>		<th><?php echo __('Result'); ?></th>		<th><?php echo __('Data'); ?></th>									<th class="actions col-md-2"><?php echo __('Actions'); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -80,6 +80,7 @@
 			<td><?php echo $this->element('value',array('page'=>'relation', 'name'=>'action', 'type'=>'string', 'v'=>$log['action'])); ?></td>
 			<td><?php echo $this->element('value',array('page'=>'relation', 'name'=>'card_id', 'type'=>'integer', 'v'=>$log['card_id'])); ?></td>
 			<td><?php echo $this->element('value',array('page'=>'relation', 'name'=>'result', 'type'=>'string', 'v'=>$log['result'])); ?></td>
+			<td><?php echo $this->element('value',array('page'=>'relation', 'name'=>'data', 'type'=>'string', 'v'=>$log['data'])); ?></td>
 			<td class="actions">
 			<?php echo $this->Html->link('<span class="glyphicon glyphicon-file"></span> '.__('Fiche'), array('controller' => 'logs', 'action' => 'view', $log['id']), array('class' => 'btn btn-default btn-xs', 'escape' => FALSE)); ?>
 			<?php if($user_level>=5) echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span> '.__('Modifier'), array('controller' => 'logs', 'action' => 'edit', $log['id']), array('class' => 'btn btn-default btn-xs', 'escape' => FALSE)); ?>

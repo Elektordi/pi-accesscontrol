@@ -20,6 +20,7 @@
 															<th><?php echo $this->Paginator->sort('card_id', 'Card Id'); ?></th>
 															<th><?php echo $this->Paginator->sort('door_id', 'Door Id'); ?></th>
 															<th><?php echo $this->Paginator->sort('result', 'Result'); ?></th>
+															<th><?php echo $this->Paginator->sort('data', 'Data'); ?></th>
 															<th class="actions col-md-2"><?php echo __('Actions'); ?></th>
 						</tr>
 					</thead>
@@ -37,6 +38,7 @@
 			<?php echo $this->Html->link($log['Door']['name'], array('controller' => 'doors', 'action' => 'view', $log['Door']['id'])); ?>
 		</td>
 		<td><?php echo $this->element('value',array('page'=>'index', 'name'=>'result', 'type'=>'string', 'v'=>$log['Log']['result'])); ?>&nbsp;</td>
+		<td><?php echo $this->element('value',array('page'=>'index', 'name'=>'data', 'type'=>'string', 'v'=>$log['Log']['data'])); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link('<span class="glyphicon glyphicon-file"></span> '.__('Fiche'), array('action' => 'view', $log['Log']['id']), array('class' => 'btn btn-default btn-xs', 'escape' => FALSE)); ?>
 			<?php if($user_level>=5) echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span> '.__('Modifier'), array('action' => 'edit', $log['Log']['id']), array('class' => 'btn btn-default btn-xs', 'escape' => FALSE)); ?>

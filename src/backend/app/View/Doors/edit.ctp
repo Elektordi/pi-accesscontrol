@@ -27,11 +27,6 @@
 </div><!-- .form-group -->
 
 <div class="form-group">
-	<?php echo $this->MyForm->label('port', 'Port');?>
-		<?php echo $this->MyForm->input('port', array('class' => 'form-control', 'value' => (empty($default_port)?null:$default_port))); ?>
-</div><!-- .form-group -->
-
-<div class="form-group">
 	<?php echo $this->MyForm->label('version', 'Version');?>
 		<?php echo $this->MyForm->input('version', array('class' => 'form-control', 'value' => (empty($default_version)?null:$default_version))); ?>
 </div><!-- .form-group -->
@@ -44,6 +39,11 @@
 <div class="form-group">
 	<?php echo $this->MyForm->label('config', 'Config');?>
 		<?php echo $this->MyForm->input('config', array('class' => 'form-control', 'value' => (empty($default_config)?null:$default_config))); ?>
+</div><!-- .form-group -->
+
+<div class="form-group">
+	<?php echo $this->MyForm->label('serial', 'Serial');?>
+		<?php echo $this->MyForm->input('serial', array('class' => 'form-control', 'value' => (empty($default_serial)?null:$default_serial))); ?>
 </div><!-- .form-group -->
 
 				</fieldset>

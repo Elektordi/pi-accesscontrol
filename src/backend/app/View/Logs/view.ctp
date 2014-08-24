@@ -41,6 +41,11 @@
 			<?php echo $this->element('value',array('page'=>'view', 'name'=>'result', 'type'=>'string', 'v'=>$log['Log']['result'])); ?>
 			&nbsp;
 		</td>
+</tr><tr>		<td><strong><?php echo __('Data'); ?></strong></td>
+		<td>
+			<?php echo $this->element('value',array('page'=>'view', 'name'=>'data', 'type'=>'string', 'v'=>$log['Log']['data'])); ?>
+			&nbsp;
+		</td>
 </tr>					</tbody>
 				</table><!-- /.table table-striped table-bordered -->
 			</div><!-- /.table-responsive -->

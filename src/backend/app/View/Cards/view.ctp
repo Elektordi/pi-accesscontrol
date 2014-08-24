@@ -57,7 +57,7 @@
 						<table class="table table-striped table-bordered">
 							<thead>
 								<tr>
-											<th><?php echo __('#'); ?></th>		<th><?php echo __('Timestamp'); ?></th>		<th><?php echo __('Action'); ?></th>		<th><?php echo __('Door Id'); ?></th>		<th><?php echo __('Result'); ?></th>									<th class="actions col-md-2"><?php echo __('Actions'); ?></th>
+											<th><?php echo __('#'); ?></th>		<th><?php echo __('Timestamp'); ?></th>		<th><?php echo __('Action'); ?></th>		<th><?php echo __('Door Id'); ?></th>		<th><?php echo __('Result'); ?></th>		<th><?php echo __('Data'); ?></th>									<th class="actions col-md-2"><?php echo __('Actions'); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -70,6 +70,7 @@
 			<td><?php echo $this->element('value',array('page'=>'relation', 'name'=>'action', 'type'=>'string', 'v'=>$log['action'])); ?></td>
 			<td><?php echo $this->element('value',array('page'=>'relation', 'name'=>'door_id', 'type'=>'integer', 'v'=>$log['door_id'])); ?></td>
 			<td><?php echo $this->element('value',array('page'=>'relation', 'name'=>'result', 'type'=>'string', 'v'=>$log['result'])); ?></td>
+			<td><?php echo $this->element('value',array('page'=>'relation', 'name'=>'data', 'type'=>'string', 'v'=>$log['data'])); ?></td>
 			<td class="actions">
 			<?php echo $this->Html->link('<span class="glyphicon glyphicon-file"></span> '.__('Fiche'), array('controller' => 'logs', 'action' => 'view', $log['id']), array('class' => 'btn btn-default btn-xs', 'escape' => FALSE)); ?>
 			<?php if($user_level>=5) echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span> '.__('Modifier'), array('controller' => 'logs', 'action' => 'edit', $log['id']), array('class' => 'btn btn-default btn-xs', 'escape' => FALSE)); ?>

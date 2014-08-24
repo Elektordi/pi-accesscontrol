@@ -41,6 +41,11 @@
 		<?php echo $this->MyForm->input('result', array('class' => 'form-control', 'value' => (empty($default_result)?null:$default_result))); ?>
 </div><!-- .form-group -->
 
+<div class="form-group">
+	<?php echo $this->MyForm->label('data', 'Data');?>
+		<?php echo $this->MyForm->input('data', array('class' => 'form-control', 'value' => (empty($default_data)?null:$default_data))); ?>
+</div><!-- .form-group -->
+
 				</fieldset>
 			<?php echo $this->MyForm->submit(__('Enregistrer'), array('class' => 'btn btn-large btn-primary')); ?>
 <?php echo $this->MyForm->end(); ?>
