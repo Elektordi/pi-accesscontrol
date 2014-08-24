@@ -1,35 +1,9 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <signal.h>
-#include <pfio.h>
-#include <zmq.h>
-
-// Start of config
-
-#define BITSCOUNT 34 // For KR300 RFID Reader
-#define TIMEOUT 40000 //µs
-#define DOOR_DELAY 5 //s
-
-#define PIN_EXIT 1
-#define PIN_LOCK 2
-#define PIN_D0 7
-#define PIN_D1 8
-
-#define PIN_DOOR 1
-#define PIN_BUZZER 7
-#define PIN_GLED 8
-
-#define DEBUG 1
-
-// End of config
+#include "helpers.h"
 
 #define MASK_EXIT (1 << (PIN_EXIT-1))
 #define MASK_LOCK (1 << (PIN_LOCK-1))
 #define MASK_D0 (1 << (PIN_D0-1))
 #define MASK_D1 (1 << (PIN_D1-1))
-
 
 void beep(int ms) {
     pfio_digital_write(PIN_BUZZER,1);
@@ -63,31 +37,40 @@ void signal_handler(int sig)
     if(sig==SIGUSR1) {
         open_door(1);
     } else if(sig==SIGHUP) {
-        clear_config();
-        read_config();
+        // TODO
     } else if(sig==SIGINT) {
         printf("Got SIGINT! Exiting...");
-        clear_config();
         exit(0);
     }
 }
 
 int main(void)
 {
-    if (pfio_init() < 0) perror("Cannot start PFIO");
+    assert(pfio_init() == 0);
 
     long int code = 0, last = 0;
     int count = 0;
     bool last_d0 = 0, last_d1 = 0;
     
-    void *context = zmq_ctx_new ();
-    void *subscriber = zmq_socket (context, ZMQ_SUB);
-    int rc = zmq_connect (subscriber, "tcp://localhost:5555");
+    bool locked = 0;
+    
+    void *context = zmq_ctx_new();
+    void *zmq_events = zmq_socket(context, ZMQ_REQ);
+    int rc = zmq_connect(zmq_events, "tcp://localhost:5551"); // TODO: Rendre dynamique
     assert (rc == 0);
     
-    if(signal(SIGHUP, signal_handler) == SIG_ERR) perror("Cannot handle signal SIGHUP.");
-    if(signal(SIGUSR1, signal_handler) == SIG_ERR) perror("Cannot handle signal SIGUSR1.");
-    if(signal(SIGINT, signal_handler) == SIG_ERR) perror("Cannot handle signal SIGINT.");
+    #if DEBUG
+    printf("Requesting config...\n");
+    #endif
+    s_send(zmq_events, "00000DUMMYSN00000:ALIVE");
+    char *config = s_recv(zmq_events);
+    #if DEBUG
+    printf("Got config: %s\n", config);
+    #endif
+    
+    assert(signal(SIGHUP, signal_handler) != SIG_ERR);
+    assert(signal(SIGUSR1, signal_handler) != SIG_ERR);
+    assert(signal(SIGINT, signal_handler) != SIG_ERR);
 
     beep(1000);
 
@@ -164,15 +147,8 @@ int main(void)
             #if DEBUG
             printf("[%li]\n",code);
             #endif
-            struct card * c = cards;
-            bool allowed = 0;
-            while(c) {
-                if(c->code == code) {
-                    allowed = 1;
-                    break;
-                }
-                c = c->next;
-            };
+            
+            bool allowed = 1; // TODO
 
             if(allowed) {
                 // Accepte

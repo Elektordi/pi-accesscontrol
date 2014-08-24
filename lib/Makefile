@@ -2,8 +2,8 @@
 all: libpiface libzeromq
 
 libpiface:
-	if [ ! -f zeromq-4.0.4/configure ]; then (cd zeromq-4.0.4 ; ./autogen.sh) fi
-	if [ ! -f zeromq-4.0.4/Makefile ]; then (cd zeromq-4.0.4 ; ./configure) fi
+	if [ ! -f piface/configure ]; then (cd piface ; ./autogen.sh) fi
+	if [ ! -f piface/Makefile ]; then (cd piface ; ./configure) fi
 	make -C piface
 
 libzeromq:
@@ -13,3 +13,8 @@ libzeromq:
 clean:
 	make -C piface clean
 	make -C zeromq-4.0.4 clean
+	
+arch-clean: clean
+	rm piface/configure
+	rm piface/Makefile
+	rm zeromq-4.0.4/Makefile
