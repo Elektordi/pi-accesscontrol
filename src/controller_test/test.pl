@@ -88,7 +88,7 @@ while(1) {
     if ($id eq '') {
         $msg = "$myid:EVENT:EXIT";
     } else {
-        $msg = "$myid:READ:DUMMY:$id";
+        $msg = "$myid:READ:TEST:$id";
     }
     print "Sending \"$msg\"... ";
     zmq_send($zmq_events, $msg, -1);
