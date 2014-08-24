@@ -11,15 +11,19 @@ http://access.zksoftware.com/productsShow.asp?ID=157&BigClassName=RFID%20Reader
 
 Wirings:
 - PiFace connected to Raspberry as indicated in manual*
-- PSU 5v <=> PiFace 5v input (between relays and outputs)
-- PSU 12v <=> Reader DC+ (Red wire) <=> PiFace Relay 1 Common
-- PSU GND <=> PiFace 0v/GND <=> Reader GND (Black wire)
-- Reader D0 (Green) <=> PiFace Input 8
-- Reader D1 (White) <=> PiFace Input 7
-- Reader Green LED (Grey) <=> PiFace Output 8
-- Reader Beeper (Purple) <=> PiFace Output 7
+- PSU 5v (+V1) <=> PiFace 5v input (between relays and outputs)
+- PSU 12v (V2) <=> Reader DC+ (Red wire) <=> PiFace Relay 0 Common
+- PSU GND (-V1) <=> PiFace 0v/GND <=> Reader GND (Black wire)
+- Reader D0 (Green) <=> PiFace Input 7
+- Reader D1 (White) <=> PiFace Input 6
+- Reader Green LED (Grey) <=> PiFace Output 7
+- Reader Beeper (Purple) <=> PiFace Output 6
 - PiFace Relay 1 NO or NC (depending of installation) <=> Door system +
 - PSU GND <=> Door system -
+
+(PiFace pins counts from 0 to 7)
+
+Take a look at sample-wiring.jpg in the same folder for a photo of a sample install.
 
 
 PiFace manual (hard to find):
